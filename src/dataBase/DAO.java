@@ -158,9 +158,11 @@ public class DAO {
     
     public void deletePlayer(int player_ID){
         try {
-            pst = con.prepareStatement("DELETE FROM ROOT.PLAYERS WHERE PLAYER_ID = ?");
-            pst.setInt(1, player_ID);
-            pst.executeUpdate();
+            if (player_ID > 0){
+                pst = con.prepareStatement("DELETE FROM ROOT.PLAYERS WHERE PLAYER_ID = ?");
+                pst.setInt(1, player_ID);
+                pst.executeUpdate();
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -186,23 +188,25 @@ public class DAO {
 
     public Player SelectSinglePlayer(int playerID){
         try {
-            pst = con.prepareStatement("SELECT * FROM ROOT.PLAYERS WHERE PLAYER_ID = ?");
-            pst.setInt(1, playerID);
-            pst.executeQuery();
-            rs = pst.executeQuery();
-            while(rs.next()){
-                player = new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
-                );
+            if(playerID > 0){
+                pst = con.prepareStatement("SELECT * FROM ROOT.PLAYERS WHERE PLAYER_ID = ?");
+                pst.setInt(1, playerID);
+                pst.executeQuery();
+                rs = pst.executeQuery();
+                while(rs.next()){
+                    player = new Player(
+                        rs.getInt(1), 
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4), 
+                        rs.getBoolean(5), 
+                        rs.getBoolean(6), 
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
+                    );
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
