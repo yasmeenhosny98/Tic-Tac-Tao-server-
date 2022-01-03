@@ -2,11 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/ITI/Project/TicTacToe/TicTacTao(server)/src/model/Player.java</file>
-            <file>file:/D:/ITI/Project/TicTacToe/TicTacTao(server)/src/model/GameSession.java</file>
-            <file>file:/D:/ITI/Project/TicTacToe/TicTacTao(server)/src/dataBase/DAO.java</file>
-            <file>file:/D:/ITI/Project/TicTacToe/TicTacTao(server)/src/model/PlayerMove.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
