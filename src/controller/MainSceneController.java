@@ -17,6 +17,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import model.Player;
@@ -41,6 +43,12 @@ public class MainSceneController implements Initializable{
     
     @FXML
     ListView currentGameListView;
+    
+    @FXML
+    BarChart onlineUserGraph;
+    
+    @FXML
+    BarChart usersGraph;
      
     FXMLLoader fxmlLoader;
     
@@ -59,6 +67,7 @@ public class MainSceneController implements Initializable{
        showOnlinePlayer();
        showOfflinePlayersIn();
        showCurrentGame();
+       showOnlineUserGraph();
     
     }
     
@@ -103,6 +112,18 @@ public class MainSceneController implements Initializable{
         } catch (IOException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void showOnlineUserGraph()
+    {
+    onlineUserGraph.setTitle("Graph For Online Users");
+    XYChart.Series series = new XYChart.Series();
+        series.setName("2004");
+        series.getData().add(new XYChart.Data("Available", 57401.85));
+    XYChart.Series series2 = new XYChart.Series();
+        series.setName("2001");
+        series.getData().add(new XYChart.Data("In Game", 40000.85));
+        onlineUserGraph.getData().addAll(series,series2);
     }
   
 
