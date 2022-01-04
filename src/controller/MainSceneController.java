@@ -46,8 +46,8 @@ public class MainSceneController implements Initializable{
     
     boolean isServerRunning=false; 
     int i=0;
-    ArrayList<FXMLLoader> onLinePlayerViewItem,offLinePlayerViewItem,currentGameViewItem;
-    ArrayList<String> onLinePlayers,offLinePlayers,currentGames;
+   // ArrayList<FXMLLoader> onLinePlayerViewItem,offLinePlayerViewItem,currentGameViewItem;
+   // ArrayList<String> onLinePlayers,offLinePlayers,currentGames;
     ObservableList observableOnlineList,observableOfflineList,observableCurrentGameList ;
    
     private DAO data =new DAO();
@@ -108,9 +108,9 @@ public class MainSceneController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        onLinePlayerViewItem=new ArrayList<>();
-        offLinePlayerViewItem=new ArrayList<>();
-        currentGameViewItem=new ArrayList<>();
+//        onLinePlayerViewItem=new ArrayList<>();
+//        offLinePlayerViewItem=new ArrayList<>();
+//        currentGameViewItem=new ArrayList<>();
         observableOnlineList = FXCollections.observableArrayList();
         observableOfflineList = FXCollections.observableArrayList();
         observableCurrentGameList = FXCollections.observableArrayList();
