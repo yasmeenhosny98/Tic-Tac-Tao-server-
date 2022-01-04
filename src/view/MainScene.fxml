@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainSceneController">
@@ -18,7 +19,7 @@
       <ListView fx:id="onlineListView" layoutX="607.0" layoutY="32.0" prefHeight="263.0" prefWidth="191.0" />
       <Text layoutX="645.0" layoutY="316.0" strokeType="OUTSIDE" strokeWidth="0.0" text="offline Players" />
       <Text layoutX="410.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Games" />
-      <BarChart fx:id="onlineUserGraph" layoutX="210.0" layoutY="31.0" prefHeight="477.0" prefWidth="200.0">
+      <BarChart fx:id="onlineUserGraph" layoutX="6.0" layoutY="82.0" prefHeight="426.0" prefWidth="404.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -26,13 +27,10 @@
           <NumberAxis prefHeight="436.0" prefWidth="14.0" side="LEFT" />
         </yAxis>
       </BarChart>
-      <BarChart fx:id="usersGraph" layoutY="31.0" prefHeight="477.0" prefWidth="200.0">
-         <xAxis>
-            <CategoryAxis side="BOTTOM" />
-         </xAxis>
-         <yAxis>
-            <NumberAxis prefHeight="436.0" prefWidth="13.0" side="LEFT" />
-         </yAxis>
-      </BarChart>
+      <Text fx:id="ServerIPLabel" layoutX="180.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="30.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>
