@@ -23,6 +23,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import model.Player;
 
@@ -54,14 +55,14 @@ public class MainSceneController implements Initializable{
     BarChart usersGraph;
     
     @FXML
-    Text ServerIPLabel;
+    TextField ServerIPLabel;
      
     FXMLLoader fxmlLoader;
     
     boolean isServerRunning=false; 
    
    
-    ObservableList observableOnlineList,observableOfflineList,observablePlayersInGameList ;
+    ObservableList observableOnlineList,observableOfflineList,observablePlayersInGameList,observableBarChart ;
     ArrayList<Player>onlinePlayersList,offlinePlayersList,playersInGameList;
     private DAO data =new DAO();
  
@@ -85,7 +86,8 @@ public class MainSceneController implements Initializable{
         }
         
         try {
-            String serverIP = InetAddress.getLocalHost().toString().substring(16);
+            InetAddress localhost = InetAddress.getLocalHost();
+            String serverIP = localhost.getHostAddress().trim();
             ServerIPLabel.setText("Server IP:  " + serverIP);
         } catch (UnknownHostException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,10 +102,15 @@ public class MainSceneController implements Initializable{
         clearAllFields();
         isServerRunning=false;
         }
-        ServerIPLabel.setText("");
+        else
+        playersInGameList.add(new Player(5, "mia", "asdasd", "sdsa", isServerRunning, isServerRunning, 0, 0, 0, 0));
+       
+        
+        //ServerIPLabel.setText("");
     }
     private void clearAllFields()
     {
+        ServerIPLabel.clear();
         observableOnlineList.clear();
         observableOfflineList.clear();
         observablePlayersInGameList.clear();
@@ -167,7 +174,8 @@ public class MainSceneController implements Initializable{
     XYChart.Series series3 = new XYChart.Series();
         series3.setName("In Game");
         series3.getData().add(new XYChart.Data("In Game", playersInGameList.size()));
-        onlineUserGraph.getData().addAll(series,series2,series3);
+        observableBarChart.addAll(series,series2,series3);
+        
     }
   
 
@@ -179,11 +187,12 @@ public class MainSceneController implements Initializable{
         observableOnlineList = FXCollections.observableArrayList();
         observableOfflineList = FXCollections.observableArrayList();
         observablePlayersInGameList = FXCollections.observableArrayList();
+        observableBarChart= FXCollections.observableArrayList();
         onlineListView.setItems(observableOnlineList);
         offlineListView.setItems(observableOfflineList);
         currentGameListView.setItems(observablePlayersInGameList);
         
-        
+        onlineUserGraph.setData(observableBarChart);
     }
     
 }
