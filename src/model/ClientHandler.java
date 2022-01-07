@@ -71,19 +71,22 @@ public class ClientHandler extends Thread {
                             }
                         }
                     } else if (recievedObject instanceof PlayerMove) {
-
-                        ((PlayerMove) recievedObject).setIsX(gameSession.turn);
-                        gameSession.playerOne.objectOutputStream.writeObject(recievedObject);
-                        gameSession.playerTwo.objectOutputStream.writeObject(recievedObject);
-
-                        gameSession.game.playersMoves[gameSession.game.counter] = (PlayerMove) recievedObject;
+                        PlayerMove move = (PlayerMove) recievedObject;
+                        move.setIsX(gameSession.turn);
+                        gameSession.playerOne.objectOutputStream.writeObject(move);
+                        gameSession.playerTwo.objectOutputStream.writeObject(move);
+                        gameSession.game.playersMoves[gameSession.game.counter] = move;
                         gameSession.game.counter++;
-
                         gameSession.turn = !gameSession.turn;
 
                     } else if (recievedObject instanceof String) {
-                        System.out.println((String) recievedObject);
-                        this.objectOutputStream.writeObject("Hello From Server Write ");
+                        String request = (String) recievedObject;
+                        if (request.equals("GetPlayers")) {
+                            AvaliableAndCurrentlyPlayingPlayersModel players = new AvaliableAndCurrentlyPlayingPlayersModel();
+                            players.setAvailablePlayers(dao.SelectAvailable());
+                            players.setPlayingPlayers(dao.SelectUavailable());
+                            this.objectOutputStream.writeObject(players);
+                        }
                     } else if (recievedObject instanceof PlayerOnline) {
                         PlayerOnline player = (PlayerOnline) recievedObject;
                         Player loginResult = dao.login(player.getEmail(), player.getPassword());
@@ -97,7 +100,6 @@ public class ClientHandler extends Thread {
                         boolean databaseResult = dao.addPlayer(register);
                         if (databaseResult) {
                             this.objectOutputStream.writeObject("PlayerRegistered");
-
                         } else {
                             this.objectOutputStream.writeObject("ServerError");
                         }
