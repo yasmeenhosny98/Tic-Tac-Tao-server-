@@ -8,10 +8,13 @@ package controller;
 import dataBase.DAO;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -25,66 +28,67 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import model.ClientHandler;
 import model.Player;
 
 /**
  *
  * @author mina
  */
-public class MainSceneController implements Initializable{
-    
+public class MainSceneController implements Initializable {
+
     @FXML
     Button btnStart;
-    
+
     @FXML
     Button btnStop;
-    
+
     @FXML
     ListView onlineListView;
-    
+
     @FXML
     ListView offlineListView;
-    
+
     @FXML
     ListView currentGameListView;
-    
+
     @FXML
     BarChart onlineUserGraph;
-    
+
     @FXML
     BarChart usersGraph;
-    
+
     @FXML
     TextField ServerIPLabel;
-     
+
     FXMLLoader fxmlLoader;
-    
-    boolean isServerRunning=false; 
-   
-   
-    ObservableList observableOnlineList,observableOfflineList,observablePlayersInGameList,observableBarChart ;
-    ArrayList<Player>onlinePlayersList,offlinePlayersList,playersInGameList;
-    private DAO data =new DAO();
- 
-    
-    
+
+    boolean isServerRunning = false;
+
+    ObservableList observableOnlineList, observableOfflineList, observablePlayersInGameList, observableBarChart;
+    ArrayList<Player> onlinePlayersList, offlinePlayersList, playersInGameList;
+    private DAO data = new DAO();
+    static ServerSocket serverSocket;
+    static Thread socketAccpetListener;
+    public static Vector<ClientHandler> clients;
+
     @FXML
-    public void startServer()
-    {        
-        if(!isServerRunning){
-        data.open();
-        onlinePlayersList=data.sellectOnLine();
-        offlinePlayersList=data.sellectOffLine();
-        playersInGameList=data.SelectUavailable();
-        
-        
-       showOnlinePlayer();
-       showOfflinePlayersIn();
-       showCurrentGame();
-       showOnlineUserGraph();
-       isServerRunning=true;
+    public void startServer() {
+        if (!isServerRunning) {
+            data.open();
+            onlinePlayersList = data.sellectOnLine();
+            offlinePlayersList = data.sellectOffLine();
+            playersInGameList = data.SelectUavailable();
+
+            showOnlinePlayer();
+            showOfflinePlayersIn();
+            showCurrentGame();
+            showOnlineUserGraph();
+            isServerRunning = true;
+            btnStart.setDisable(true);
+            btnStop.setDisable(false);
         }
-        
+
         try {
             InetAddress localhost = InetAddress.getLocalHost();
             String serverIP = localhost.getHostAddress().trim();
@@ -92,24 +96,49 @@ public class MainSceneController implements Initializable{
         } catch (UnknownHostException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    @FXML
-    public void stopServer()
-    {
-        if(isServerRunning){
-        data.closeConnection();
-        clearAllFields();
-        isServerRunning=false;
-        }
-        else
-        playersInGameList.add(new Player(5, "mia", "asdasd", "sdsa", isServerRunning, isServerRunning, 0, 0, 0, 0));
-       
         
+        clients = new Vector<ClientHandler>();
+        try {
+            serverSocket = new ServerSocket(5006);
+            System.out.println("ServerStarted");
+            socketAccpetListener = new Thread(() -> {
+                while (true) {
+                    System.out.println("Socket Listener Thread");
+                    try {
+                        Socket s = serverSocket.accept();
+                        clients.add(new ClientHandler(s));
+                        System.out.println("Clients number : " + clients.size());
+                        for (int i = 0; i < clients.size(); i++) {
+                            System.out.println(clients.get(i).toString());
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            socketAccpetListener.setDaemon(true);
+            socketAccpetListener.start();
+        } catch (IOException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    public void stopServer() {
+        if (isServerRunning) {
+            data.closeConnection();
+            clearAllFields();
+            isServerRunning = false;
+            btnStart.setDisable(false);
+            btnStop.setDisable(true);
+        } else {
+            playersInGameList.add(new Player(5, "mia", "asdasd", "sdsa", isServerRunning, isServerRunning, 0, 0, 0, 0));
+        }
+
         //ServerIPLabel.setText("");
     }
-    private void clearAllFields()
-    {
+
+    private void clearAllFields() {
         ServerIPLabel.clear();
         observableOnlineList.clear();
         observableOfflineList.clear();
@@ -119,80 +148,80 @@ public class MainSceneController implements Initializable{
         offlineListView.refresh();
         currentGameListView.refresh();
         onlineUserGraph.getData().clear();
-    
+
     }
 
-    public void showOnlinePlayer()
-    {     
-        for(int i=0;i<onlinePlayersList.size();i++){
-        try {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/view/CustomItemListView.fxml"));
-            observableOnlineList.add(fxmlLoader.load());
-            ((CustomItemListViewController)fxmlLoader.getController()).setText(onlinePlayersList.get(i).getUsername());
-            onlineListView.refresh();
-        } catch (IOException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-    }
-    public void showOfflinePlayersIn()
-    { 
-        for(int i=0;i<offlinePlayersList.size();i++)
-        try {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/view/CustomItemListView.fxml"));
-            observableOfflineList.add(fxmlLoader.load());
-            ((CustomItemListViewController)fxmlLoader.getController()).setText(offlinePlayersList.get(i).getUsername());
-            onlineListView.refresh();
-        } catch (IOException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    public void showCurrentGame()
-    {
-        for(int i=0;i<playersInGameList.size();i++){
-      try {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/view/CustomItemListView.fxml"));
-            observablePlayersInGameList.add(fxmlLoader.load());
-            ((CustomItemListViewController)fxmlLoader.getController()).setText(playersInGameList.get(i).getUsername());
-            onlineListView.refresh();
-        } catch (IOException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void showOnlinePlayer() {
+        for (int i = 0; i < onlinePlayersList.size(); i++) {
+            try {
+                fxmlLoader = new FXMLLoader(getClass().getResource("/view/CustomItemListView.fxml"));
+                observableOnlineList.add(fxmlLoader.load());
+                ((CustomItemListViewController) fxmlLoader.getController()).setText(onlinePlayersList.get(i).getUsername());
+                onlineListView.refresh();
+            } catch (IOException ex) {
+                Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-    
-    public void showOnlineUserGraph()
-    {
-    onlineUserGraph.setTitle("Users In Server");
-    XYChart.Series series = new XYChart.Series();
+
+    public void showOfflinePlayersIn() {
+        for (int i = 0; i < offlinePlayersList.size(); i++) {
+            try {
+                fxmlLoader = new FXMLLoader(getClass().getResource("/view/CustomItemListView.fxml"));
+                observableOfflineList.add(fxmlLoader.load());
+                ((CustomItemListViewController) fxmlLoader.getController()).setText(offlinePlayersList.get(i).getUsername());
+                onlineListView.refresh();
+            } catch (IOException ex) {
+                Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+
+    public void showCurrentGame() {
+        for (int i = 0; i < playersInGameList.size(); i++) {
+            try {
+                fxmlLoader = new FXMLLoader(getClass().getResource("/view/CustomItemListView.fxml"));
+                observablePlayersInGameList.add(fxmlLoader.load());
+                ((CustomItemListViewController) fxmlLoader.getController()).setText(playersInGameList.get(i).getUsername());
+                onlineListView.refresh();
+            } catch (IOException ex) {
+                Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void showOnlineUserGraph() {
+        onlineUserGraph.setTitle("Users In Server");
+        XYChart.Series series = new XYChart.Series();
         series.setName("Online");
-        series.getData().add(new XYChart.Data("Online",onlinePlayersList.size()));
-    XYChart.Series series2 = new XYChart.Series();
+        series.getData().add(new XYChart.Data("Online", onlinePlayersList.size()));
+        XYChart.Series series2 = new XYChart.Series();
         series2.setName("Offline");
         series2.getData().add(new XYChart.Data("Offline", offlinePlayersList.size()));
-    XYChart.Series series3 = new XYChart.Series();
+        XYChart.Series series3 = new XYChart.Series();
         series3.setName("In Game");
         series3.getData().add(new XYChart.Data("In Game", playersInGameList.size()));
-        observableBarChart.addAll(series,series2,series3);
-        
+        observableBarChart.addAll(series, series2, series3);
+
     }
-  
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        onlinePlayersList=new ArrayList<>();
-        offlinePlayersList=new ArrayList<>();
-        playersInGameList=new ArrayList<>();
+
+        btnStop.setDisable(true);
+        onlinePlayersList = new ArrayList<>();
+        offlinePlayersList = new ArrayList<>();
+        playersInGameList = new ArrayList<>();
         observableOnlineList = FXCollections.observableArrayList();
         observableOfflineList = FXCollections.observableArrayList();
         observablePlayersInGameList = FXCollections.observableArrayList();
-        observableBarChart= FXCollections.observableArrayList();
+        observableBarChart = FXCollections.observableArrayList();
         onlineListView.setItems(observableOnlineList);
         offlineListView.setItems(observableOfflineList);
         currentGameListView.setItems(observablePlayersInGameList);
-        
+
         onlineUserGraph.setData(observableBarChart);
     }
-    
+
 }

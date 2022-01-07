@@ -8,10 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import model.Player;
+import model.RegisterModel;
 import org.apache.derby.jdbc.ClientDriver;
 
 public class DAO {
-    
+
     static Connection con;
     Statement stmt;
     PreparedStatement pst;
@@ -19,35 +20,36 @@ public class DAO {
     ArrayList<Player> rows;
     ResultSet rs;
     Player player;
-    
-    public DAO(){}
-    
-    public  void open(){
+
+    public DAO() {
+    }
+
+    public void open() {
         try {
             DriverManager.registerDriver(new ClientDriver());
-            con = DriverManager.getConnection("jdbc:derby://localhost:1527/TicTacToe", "root", "root");  
+            con = DriverManager.getConnection("jdbc:derby://localhost:1527/TicTacToe", "root", "root");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
-    public ArrayList<Player> selectAll(){
+
+    public ArrayList<Player> selectAll() {
         try {
             rows = new ArrayList<>();
-            Statement stmt = con.createStatement() ;
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS") ;
-            while(rs.next()){ 
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS");
+            while (rs.next()) {
                 rows.add(new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 ));
             }
         } catch (SQLException ex) {
@@ -55,24 +57,24 @@ public class DAO {
         }
         return rows;
     }
-    
-    public ArrayList<Player> sellectOnLine(){
+
+    public ArrayList<Player> sellectOnLine() {
         try {
             rows = new ArrayList<>();
-            Statement stmt = con.createStatement() ;
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISONLINE = TRUE") ;
-            while(rs.next()){ 
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISONLINE = TRUE");
+            while (rs.next()) {
                 rows.add(new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 ));
             }
         } catch (SQLException ex) {
@@ -80,24 +82,24 @@ public class DAO {
         }
         return rows;
     }
-    
-    public ArrayList<Player> sellectOffLine(){
+
+    public ArrayList<Player> sellectOffLine() {
         try {
             rows = new ArrayList<>();
-            Statement stmt = con.createStatement() ;
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISONLINE = FALSE") ;
-            while(rs.next()){ 
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISONLINE = FALSE");
+            while (rs.next()) {
                 rows.add(new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 ));
             }
         } catch (SQLException ex) {
@@ -105,24 +107,24 @@ public class DAO {
         }
         return rows;
     }
-    
-    public ArrayList<Player> SelectAvailable(){
+
+    public ArrayList<Player> SelectAvailable() {
         try {
             rows = new ArrayList<>();
-            Statement stmt = con.createStatement() ;
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISINGAME = FALSE") ;
-            while(rs.next()){ 
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISINGAME = FALSE");
+            while (rs.next()) {
                 rows.add(new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 ));
             }
         } catch (SQLException ex) {
@@ -130,24 +132,24 @@ public class DAO {
         }
         return rows;
     }
-    
-    public ArrayList<Player> SelectUavailable(){
+
+    public ArrayList<Player> SelectUavailable() {
         try {
             rows = new ArrayList<>();
-            Statement stmt = con.createStatement() ;
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISINGAME = TRUE") ;
-            while(rs.next()){ 
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISINGAME = TRUE");
+            while (rs.next()) {
                 rows.add(new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 ));
             }
         } catch (SQLException ex) {
@@ -155,10 +157,10 @@ public class DAO {
         }
         return rows;
     }
-    
-    public void deletePlayer(int player_ID){
+
+    public void deletePlayer(int player_ID) {
         try {
-            if (player_ID > 0){
+            if (player_ID > 0) {
                 pst = con.prepareStatement("DELETE FROM ROOT.PLAYERS WHERE PLAYER_ID = ?");
                 pst.setInt(1, player_ID);
                 pst.executeUpdate();
@@ -167,44 +169,42 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void addPlayer(Player player){
+
+    public boolean addPlayer(RegisterModel RegisterModel) {
+        int newRows;
         try {
-            pst = con.prepareStatement("INSERT INTO ROOT.PLAYERS VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            pst.setString(1, player.getUsername());
-            pst.setString(2, player.getEmail());
-            pst.setString(3, player.getPassword());
-            pst.setBoolean(4, player.isActive());
-            pst.setBoolean(5, player.isPlaying());
-            pst.setInt(6, player.getScore());
-            pst.setInt(7, player.getWins());
-            pst.setInt(8, player.getLoses());
-            pst.setInt(9, player.getDraws());
-            pst.executeUpdate();
+            
+            pst = con.prepareStatement("INSERT INTO PLAYERS (USERNAME , EMAIL , PASSWORD) VALUES ( ? , ? , ? )");
+            pst.setString(1, RegisterModel.getUserName());
+            pst.setString(2, RegisterModel.getEmail());
+            pst.setString(3, RegisterModel.getPassword());
+            newRows = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
+            newRows = 0;
         }
+        return (newRows == 1);
     }
 
-    public Player SelectSinglePlayer(int playerID){
+    public Player SelectSinglePlayer(int playerID) {
         try {
-            if(playerID > 0){
+            if (playerID > 0) {
                 pst = con.prepareStatement("SELECT * FROM ROOT.PLAYERS WHERE PLAYER_ID = ?");
                 pst.setInt(1, playerID);
                 pst.executeQuery();
                 rs = pst.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     player = new Player(
-                        rs.getInt(1), 
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4), 
-                        rs.getBoolean(5), 
-                        rs.getBoolean(6), 
-                        rs.getInt(7),
-                        rs.getInt(8),
-                        rs.getInt(9),
-                        rs.getInt(10)
+                            rs.getInt(1),
+                            rs.getString(2),
+                            rs.getString(3),
+                            rs.getString(4),
+                            rs.getBoolean(5),
+                            rs.getBoolean(6),
+                            rs.getInt(7),
+                            rs.getInt(8),
+                            rs.getInt(9),
+                            rs.getInt(10)
                     );
                 }
             }
@@ -213,8 +213,8 @@ public class DAO {
         }
         return player;
     }
-    
-    public void updatePlayer(Player player){
+
+    public void updatePlayer(Player player) {
         try {
             pst = con.prepareStatement("UPDATE ROOT.PLAYERS SET USERNAME = ?, EMAIL = ?, PASSWORD = ?, ISONLINE = ?, ISINGAME = ?, SCORE = ?, WIN = ?, LOSE = ?, DRAW = ? WHERE PLAYER_ID = ?");
             pst.setString(1, player.getUsername());
@@ -232,8 +232,8 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void logOut(Player player){
+
+    public void logOut(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISONLINE = FALSE ,ISINGAME = FALSE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -242,8 +242,8 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void Online(Player player){
+
+    public void Online(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISONLINE = TRUE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -252,8 +252,8 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void Offline(Player player){
+
+    public void Offline(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISONLINE = FALSE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -262,8 +262,8 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void inGame(Player player){
+
+    public void inGame(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISINGAME = TRUE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -272,8 +272,8 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void notINGame(Player player){
+
+    public void notINGame(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISINGAME = FALSE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -282,58 +282,58 @@ public class DAO {
             ex.printStackTrace();
         }
     }
-    
-    public void win(Player player){
+
+    public void win(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET WIN = ?, SCORE = ? WHERE PLAYER_ID = ?");
-            pst.setInt(1, player.getWins()+1);
-            pst.setInt(2, player.getScore()+3);
+            pst.setInt(1, player.getWins() + 1);
+            pst.setInt(2, player.getScore() + 3);
             pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
-    public void draw(Player player){
+
+    public void draw(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET DRAW = ?, SCORE = ? WHERE PLAYER_ID = ?");
-            pst.setInt(1, player.getDraws()+1);
-            pst.setInt(2, player.getScore()+1);
+            pst.setInt(1, player.getDraws() + 1);
+            pst.setInt(2, player.getScore() + 1);
             pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
-    public void lose(Player player){
+
+    public void lose(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET LOSE = ? WHERE PLAYER_ID = ?");
-            pst.setInt(1, player.getLoses()+1);
+            pst.setInt(1, player.getLoses() + 1);
             pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
-    public Player login(String Email , String password){
+
+    public Player login(String Email, String password) {
         try {
             pst = con.prepareStatement("SELECT * FROM ROOT.PLAYERS WHERE EMAIL = ? AND PASSWORD = ?");
             pst.setString(1, Email);
             pst.setString(2, password);
             pst.executeQuery();
             rs = pst.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 player = new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 );
             }
         } catch (SQLException ex) {
@@ -341,24 +341,24 @@ public class DAO {
         }
         return player;
     }
-    
-    public ArrayList<Player> topTen(){
+
+    public ArrayList<Player> topTen() {
         try {
             rows = new ArrayList<>();
-            Statement stmt = con.createStatement() ;
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS ORDER BY SCORE DESC FETCH FIRST 10 ROWS ONLY") ;
-            while(rs.next()){ 
+            Statement stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS ORDER BY SCORE DESC FETCH FIRST 10 ROWS ONLY");
+            while (rs.next()) {
                 rows.add(new Player(
-                    rs.getInt(1), 
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4), 
-                    rs.getBoolean(5), 
-                    rs.getBoolean(6), 
-                    rs.getInt(7),
-                    rs.getInt(8),
-                    rs.getInt(9),
-                    rs.getInt(10)
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBoolean(5),
+                        rs.getBoolean(6),
+                        rs.getInt(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10)
                 ));
             }
         } catch (SQLException ex) {
@@ -366,13 +366,13 @@ public class DAO {
         }
         return rows;
     }
-    
-    public void closeConnection(){
+
+    public void closeConnection() {
         try {
             con.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-    
+
 }
