@@ -76,9 +76,9 @@ public class MainSceneController implements Initializable {
     public void startServer() {
         if (!isServerRunning) {
             data.open();
-            onlinePlayersList = data.sellectOnLine();
-            offlinePlayersList = data.sellectOffLine();
-            playersInGameList = data.SelectUavailable();
+            onlinePlayersList = data.selectOnLine();
+            offlinePlayersList = data.selectOffLine();
+            playersInGameList = data.selectUavailable();
 
             showOnlinePlayer();
             showOfflinePlayersIn();
@@ -96,7 +96,7 @@ public class MainSceneController implements Initializable {
         } catch (UnknownHostException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         clients = new Vector<ClientHandler>();
         try {
             serverSocket = new ServerSocket(5006);

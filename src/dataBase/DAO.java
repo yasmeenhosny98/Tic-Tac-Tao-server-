@@ -58,7 +58,7 @@ public class DAO {
         return rows;
     }
 
-    public ArrayList<Player> sellectOnLine() {
+    public ArrayList<Player> selectOnLine() {
         try {
             rows = new ArrayList<>();
             Statement stmt = con.createStatement();
@@ -83,7 +83,7 @@ public class DAO {
         return rows;
     }
 
-    public ArrayList<Player> sellectOffLine() {
+    public ArrayList<Player> selectOffLine() {
         try {
             rows = new ArrayList<>();
             Statement stmt = con.createStatement();
@@ -108,7 +108,7 @@ public class DAO {
         return rows;
     }
 
-    public ArrayList<Player> SelectAvailable() {
+    public ArrayList<Player> selectAvailable() {
         try {
             rows = new ArrayList<>();
             Statement stmt = con.createStatement();
@@ -133,7 +133,7 @@ public class DAO {
         return rows;
     }
 
-    public ArrayList<Player> SelectUavailable() {
+    public ArrayList<Player> selectUavailable() {
         try {
             rows = new ArrayList<>();
             Statement stmt = con.createStatement();
@@ -173,7 +173,7 @@ public class DAO {
     public boolean addPlayer(RegisterModel RegisterModel) {
         int newRows;
         try {
-            
+
             pst = con.prepareStatement("INSERT INTO PLAYERS (USERNAME , EMAIL , PASSWORD) VALUES ( ? , ? , ? )");
             pst.setString(1, RegisterModel.getUserName());
             pst.setString(2, RegisterModel.getEmail());
@@ -243,7 +243,7 @@ public class DAO {
         }
     }
 
-    public void Online(Player player) {
+    public void setPlayerOnline(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISONLINE = TRUE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -253,7 +253,7 @@ public class DAO {
         }
     }
 
-    public void Offline(Player player) {
+    public void setPlayerOffline(Player player) {
         try {
             pst = con.prepareStatement("Update ROOT.PLAYERS SET ISONLINE = FALSE WHERE PLAYER_ID = ?");
             pst.setInt(1, player.getId());
@@ -339,6 +339,7 @@ public class DAO {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        setPlayerOnline(player);
         return player;
     }
 

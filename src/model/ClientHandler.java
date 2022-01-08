@@ -19,30 +19,30 @@ import java.util.logging.Logger;
  * @author Ghaly
  */
 public class ClientHandler extends Thread {
-
+    
     ObjectInputStream objectInputStream;
     ObjectOutputStream objectOutputStream;
     Socket socket;
     GameSessionOnline gameSession;
-
+    
     private DAO dao = new DAO();
-
+    
     public ClientHandler(Socket s) {
-
+        
         try {
             if (s.isConnected()) {
                 socket = s;
                 objectOutputStream = new ObjectOutputStream(s.getOutputStream());
                 objectInputStream = new ObjectInputStream(s.getInputStream());
-
+                
             }
             start();
         } catch (IOException ex) {
-
+            
             ex.printStackTrace();
         }
     }
-
+    
     @Override
     public void run() {
         while (true) {
@@ -50,6 +50,7 @@ public class ClientHandler extends Thread {
             try {
                 if (objectInputStream != null) {
                     Object recievedObject = objectInputStream.readObject();
+                    
                     if (recievedObject instanceof RequestGameOnline) {
                         RequestGameOnline request = (RequestGameOnline) recievedObject;
                         if (!request.isSent()) {
@@ -63,11 +64,11 @@ public class ClientHandler extends Thread {
                                         MainSceneController.clients.get(request.getRequesterPlayerId() - 1),
                                         MainSceneController.clients.get(request.getRecieverPlayerId() - 1)
                                 );
-
+                                
                                 MainSceneController.clients.get(request.getRecieverPlayerId() - 1).objectOutputStream.writeObject(gameSession.game);
                                 MainSceneController.clients.get(request.getRequesterPlayerId() - 1).objectOutputStream.writeObject(gameSession.game);
                                 MainSceneController.clients.get(request.getRequesterPlayerId() - 1).gameSession = gameSession;
-
+                                
                             }
                         }
                     } else if (recievedObject instanceof PlayerMove) {
@@ -78,13 +79,13 @@ public class ClientHandler extends Thread {
                         gameSession.game.playersMoves[gameSession.game.counter] = move;
                         gameSession.game.counter++;
                         gameSession.turn = !gameSession.turn;
-
+                        
                     } else if (recievedObject instanceof String) {
                         String request = (String) recievedObject;
                         if (request.equals("GetPlayers")) {
-                            AvaliableAndCurrentlyPlayingPlayersModel players = new AvaliableAndCurrentlyPlayingPlayersModel();
-                            players.setAvailablePlayers(dao.SelectAvailable());
-                            players.setPlayingPlayers(dao.SelectUavailable());
+                            OnlineAndCurrentlyPlayingPlayersModel players = new OnlineAndCurrentlyPlayingPlayersModel();
+                            players.setAvailablePlayers(dao.selectOnLine());
+                            players.setPlayingPlayers(dao.selectUavailable());
                             this.objectOutputStream.writeObject(players);
                         }
                     } else if (recievedObject instanceof PlayerOnline) {
@@ -103,10 +104,15 @@ public class ClientHandler extends Thread {
                         } else {
                             this.objectOutputStream.writeObject("ServerError");
                         }
+                    } else if (recievedObject instanceof Integer) {
+                        Integer playerId = (Integer) recievedObject;
+                        Player player = dao.SelectSinglePlayer(playerId.intValue());
+                        player.setScore(player.getWins() * 3);
+                        this.objectOutputStream.writeObject(player);
                     }
                 }
             } catch (Exception ex) {
-
+                
                 try {
                     //  closeConnection();
                     socket.close();
@@ -120,30 +126,30 @@ public class ClientHandler extends Thread {
 //                    }
                     this.stop();
                     MainSceneController.clients.remove(this);
-
+                    
                 } catch (IOException exe) {
                     ex.printStackTrace();
                 }
             }
-
+            
         }
     }
-
+    
     public void closeConnection() {
         try {
             MainSceneController.clients.remove(this);
             this.stop();
             this.objectInputStream.close();
             this.objectOutputStream.close();
-
+            
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @Override
     public String toString() {
         return "ClientHandler{" + "objectInputStream=" + objectInputStream + ", objectOutputStream=" + objectOutputStream + '}';
     }
-
+    
 }
