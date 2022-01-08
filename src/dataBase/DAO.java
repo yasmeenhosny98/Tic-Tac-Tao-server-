@@ -108,11 +108,13 @@ public class DAO {
         return rows;
     }
 
-    public ArrayList<Player> selectAvailable() {
+    public ArrayList<Player> selectAvailable(int id) {
         try {
             rows = new ArrayList<>();
             Statement stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM ROOT.PLAYERS WHERE ISINGAME = FALSE");
+            pst = con.prepareStatement("SELECT * FROM ROOT.PLAYERS WHERE ISINGAME = FALSE AND ISONLINE = TRUE AND PLAYER_ID !=?");
+            pst.setInt(1, id);
+            rs = pst.executeQuery();
             while (rs.next()) {
                 rows.add(new Player(
                         rs.getInt(1),

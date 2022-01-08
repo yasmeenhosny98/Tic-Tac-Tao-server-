@@ -5,42 +5,36 @@
  */
 package model;
 
-import controller.MainSceneController;
 import java.io.Serializable;
-
 
 /**
  *
  * @author Ghaly
  */
-public class RequestGameOnline implements Serializable {
+public class RequestGame implements Serializable {
 
-    ;
-
+    private static final long serialVersionUID = 6529685888267757700L;
     private int requesterPlayerId;
     private int recieverPlayerId;
 
     private boolean accepted;
     private boolean sent;
 
-    private GameSessionOnline gameSession;
-    private static final long serialVersionUID = 6529685098267757690L;
+    private GameSession gameSession;
+    public RequestGame() {
+    }
 
-    public RequestGameOnline(int requesterPlayerId, int recieverPlayerId) {
+    public RequestGame(int requesterPlayerId, int recieverPlayerId) {
         this.requesterPlayerId = requesterPlayerId;
         this.recieverPlayerId = recieverPlayerId;
         this.accepted = false;
-        if (accepted) {
-            gameSession = new GameSessionOnline(MainSceneController.clients.get(requesterPlayerId - 1), MainSceneController.clients.get(recieverPlayerId - 1));
-            System.out.println("GameSession Created");
-        }
+        this.sent = false;
     }
 
-    public RequestGameOnline(int requesterPlayerId, int recieverPlayerId, boolean accetpance) {
+    public RequestGame(int requesterPlayerId, int recieverPlayerId, boolean accetpance) {
         this.requesterPlayerId = requesterPlayerId;
         this.recieverPlayerId = recieverPlayerId;
         this.accepted = accetpance;
-
     }
 
     public void setAccepted(boolean accepted) {
@@ -65,7 +59,7 @@ public class RequestGameOnline implements Serializable {
 
     @Override
     public String toString() {
-        return "RequestGame{" + "requesterPlayerId=" + requesterPlayerId + ", recieverPlayerId=" + recieverPlayerId + ", accepted=" + accepted + ", gameSession=" + gameSession + '}';
+        return "RequestGame{" + "requesterPlayerId=" + requesterPlayerId + ", recieverPlayerId=" + recieverPlayerId + ", accepted=" + accepted + ", gameSession=";// + gameSession + '}';
     }
 
     public boolean isAccepted() {

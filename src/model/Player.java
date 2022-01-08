@@ -29,6 +29,11 @@ public class Player implements Serializable {
         this.draws = draws;
     }
 
+    public Player(int id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
